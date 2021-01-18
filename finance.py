@@ -1,23 +1,36 @@
-# TODO-1: Add Bill class here
-# TODO-1: Add Payment class here
-# TODO-1: Add .sample() classmethod for Bill and Payment which returns
-
-# an instance:
-# for example:
-#    class Test:
-#         def __init__(self, name, number):
-#             self.name = name
-#             self.number = number
-#
-#         @classmethod
-#         def sample(cls):
-#             return cls(name='ali', number=10)
+import uuid
+from datetime import datetime
+from khayyam import JalaliDatetime
 
 
-# TODO-2: Replace all uuid attrs with uuid.uuid4() method and prevent class
-#       to get from input
-# TODO-2: Change datetime attr to be assigned automatically in Payment class
-# TODO-2: Add jalali_datetime property to the Payment class
+class Payment:
+    def __init__(self, payment_type, is_paid,  price):
+        self.uuid = uuid.uuid4()
+        self.payment_type = payment_type
+        self.is_paid = is_paid
+        self.price = price
+        self._datetime = datetime.now()
+
+    @property
+    def jalali_datetime(self):
+        return JalaliDatetime(self._datetime)
+
+    @classmethod
+    def sample(cls):
+        return cls(payment_type='cash', is_paid=True, price=60)
+
+
+class Bill:
+    def __init__(self, total_price, payment):
+        self.uuid = uuid.uuid4()
+        self.total_price = total_price
+        self.payment = payment
+
+    @classmethod
+    def sample(cls):
+        return cls(total_price=50, payment=Payment.sample())
+
+
 # TODO-3: Set valid Payment instance for payment attr in Bill instance
 # TODO-3: Add show_unpaid() classmethod to the Bill class which will return a
 #       list of all unpaid bills, (Implementation is up to you)

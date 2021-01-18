@@ -1,19 +1,40 @@
-# TODO-1: Add Item class here
-# TODO-1: Add .sample() classmethod for Item which returns an instance:
-# for example:
-#    class Test:
-#         def __init__(self, name, number):
-#             self.name = name
-#             self.number = number
-#
-#         @classmethod
-#         def sample(cls):
-#             return cls(name='ali', number=10)
+import uuid
+from datetime import datetime
+from khayyam import JalaliDatetime
 
-# TODO-2: Add item_id to the Item class, item_id should be auto incremental
-# TODO-2: item_types should be one of (f, s or b) for Food, Starter or Beverage
-# TODO-2: Change datetime attr to be assigned automatically in Item class
-# TODO-2: Add jalali_datetime property to the Item class
+
+class Item:
+    item_id = 0
+    item_type_list = ['f', 'b', 's']
+    food_list = []
+    beverage_list = []
+    starter_list = []
+
+    def __init__(self, name, item_type, price):
+        self.uuid = uuid.uuid4()
+        self.name = name
+        self.item_type = item_type.lower()
+        self.check_item_type()
+        self.price = price
+        self._datetime = datetime.now()
+        self.item_id = self.generate_id()
+
+    @property
+    def jalali_datetime(self):
+        return JalaliDatetime(self._datetime)
+
+    def check_item_type(self):
+        if self.item_type not in self.item_type_list:
+            print('your item type is incorrect!')
+
+    def generate_id(self):
+        self.item_id += 1
+        return self.item_id
+
+    @classmethod
+    def sample(cls):
+        return cls(name='item1', item_type='f', price=10)
+
 # TODO-3: Add show_menu() classmethod to the Item class which will print all
 #       items in the menu
 # TODO-3: Add prompt() method to the Item class which will get proper dict for
