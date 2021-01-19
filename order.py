@@ -1,9 +1,8 @@
 import uuid
-from khayyam import  JalaliDatetime
+from khayyam import JalaliDatetime
 from datetime import datetime
-from menu import Item
 from saloon import Table
-from finance import Bill
+from finance import Bill, Payment
 
 
 class Order:
@@ -11,14 +10,15 @@ class Order:
     unpaid_orders = []
     orders = []
 
-    def __init__(self, item_dict, in_out, bill, table):
+    def __init__(self, item_dict, in_out, table):
         self.uuid = uuid.uuid4()
         self.item_dict = item_dict
         self.in_out = in_out.upper()
-        self.bill = bill
         self.table = table
         self._datetime = datetime.now()
-        self.store()
+        self.store_orders()
+        self.bill = self.set_bill()
+        self.store_unpaid_orders()
 
     @property
     def jalali_datetime(self):
@@ -26,13 +26,16 @@ class Order:
 
     @classmethod
     def sample(cls):
-        return cls(item_dict={Item.sample()}, bill=cls.set_bill(cls.unpaid_orders[0]),
+        return cls(item_dict={'name': 'item1', 'item_type': 'f', 'price': 10},
                    in_out="i", table=Table.sample())
 
-    def store(self):
-        if self.bill.payment.is_paid:
-            self.unpaid_orders.append(self)
+    def store_orders(self):
         self.orders.append(self)
+
+    def store_unpaid_orders(self):
+        for order in self.orders:
+            if not order.bill.payment.is_paid:
+                self.unpaid_orders.append(self)
 
     def assign_table(self, table_num):
         if self.table.reserved(table_num) is False:
@@ -43,12 +46,14 @@ class Order:
         if self.in_out not in self.in_out_list:
             print('your in out type is incorrect!')
 
-    def set_bill(self):
+    @classmethod
+    def set_bill(cls):
         s = 0
-        for order in self.orders:
-            s += order.item.price
-        pay = self.bill.payment.sample()
+        for order in cls.orders:
+            s += order.item_dict['price']
+        pay = Payment('cash', True, s)
         return Bill(s, pay)
 
 # TODO-2: Add set_bill method to the Order class which create proper Bill
 #       instance according to the items in the order
+

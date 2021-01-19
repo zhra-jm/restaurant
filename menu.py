@@ -27,9 +27,10 @@ class Item:
         if self.item_type not in self.item_type_list:
             print('your item type is incorrect!')
 
-    def generate_id(self):
-        self.item_id += 1
-        return self.item_id
+    @classmethod
+    def generate_id(cls):
+        cls.item_id += 1
+        return cls.item_id
 
     @classmethod
     def sample(cls):
