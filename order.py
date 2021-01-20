@@ -48,14 +48,14 @@ class Order:
         if self.in_out not in self.in_out_list:
             print('your in out type is incorrect!')
 
-    @classmethod
-    def set_bill(cls):
-        s = 0
-        for order in cls.orders:
-            'absolutely wrong'
-            s += order.item_dict.keys['price'] * order.item_dict.values
-        pay = Payment('cash', True, s)
-        return Bill(s, pay)
+    def set_bill(self):
+        all_prices = 0
+        for item in self.item_dict:
+            all_prices += item.price * self.item_dict[item]
+        return Bill(total_price=all_prices, payment=Payment(
+            price=all_prices,
+            payment_type='cash',
+            is_paid=False))
 
 # TODO-2: Add set_bill method to the Order class which create proper Bill
 #       instance according to the items in the order
