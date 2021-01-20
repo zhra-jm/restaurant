@@ -56,7 +56,3 @@ class Order:
             price=all_prices,
             payment_type='cash',
             is_paid=False))
-
-# TODO-2: Add set_bill method to the Order class which create proper Bill
-#       instance according to the items in the order
-
