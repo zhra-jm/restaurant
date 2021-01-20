@@ -36,6 +36,10 @@ class Item:
     def sample(cls):
         return cls(name='item1', item_type='f', price=10)
 
+    @classmethod
+    def sample2(cls):
+        return cls(name='item2', item_type='b', price=1)
+
 # TODO-3: Add show_menu() classmethod to the Item class which will print all
 #       items in the menu
 # TODO-3: Add prompt() method to the Item class which will get proper dict for

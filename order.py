@@ -1,6 +1,8 @@
 import uuid
 from khayyam import JalaliDatetime
 from datetime import datetime
+
+from menu import Item
 from saloon import Table
 from finance import Bill, Payment
 
@@ -26,7 +28,7 @@ class Order:
 
     @classmethod
     def sample(cls):
-        return cls(item_dict={'name': 'item1', 'item_type': 'f', 'price': 10},
+        return cls(item_dict={Item.sample(): 2, Item.sample2(): 2},
                    in_out="i", table=Table.sample())
 
     def store_orders(self):
@@ -50,7 +52,8 @@ class Order:
     def set_bill(cls):
         s = 0
         for order in cls.orders:
-            s += order.item_dict['price']
+            'absolutely wrong'
+            s += order.item_dict.keys['price'] * order.item_dict.values
         pay = Payment('cash', True, s)
         return Bill(s, pay)
 
