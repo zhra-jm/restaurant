@@ -2,15 +2,18 @@ import uuid
 from khayyam import JalaliDatetime
 from datetime import datetime
 
+from lib import Root
 from menu import Item
 from saloon import Table
 from finance import Bill, Payment
 
 
-class Order:
+class Order(Root):
+    order_list = []
     in_out_list = ["I", "O"]
     unpaid_orders = []
     orders = []
+    object_list = []
 
     def __init__(self, item_dict, in_out, table):
         self.uuid = uuid.uuid4()
@@ -21,23 +24,28 @@ class Order:
         self.store_orders()
         self.bill = self.set_bill()
         self.store_unpaid_orders()
+        self.object_list.append(self)
+        super().__init__()
 
     @property
     def jalali_datetime(self):
         return JalaliDatetime(self._datetime)
 
     @classmethod
-    def sample(cls):
-        return cls(item_dict={Item.sample(): 2, Item.sample2(): 2},
-                   in_out="i", table=Table.sample())
+    def sample(cls, item_dict=None, in_out="i", table=Table.sample()):
+        if item_dict is None:
+            item_dict = {Item.sample: 2}
+        return cls(item_dict=item_dict, in_out=in_out, table=table)
 
     def store_orders(self):
         self.orders.append(self)
+        Bill.orders_list.append(self)
 
     def store_unpaid_orders(self):
         for order in self.orders:
             if not order.bill.payment.is_paid:
                 self.unpaid_orders.append(self)
+                Bill.unpaid_list.append(self)
 
     def assign_table(self, table_num):
         if self.table.reserved(table_num) is False:
