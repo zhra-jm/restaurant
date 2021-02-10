@@ -2,8 +2,12 @@ import uuid
 from datetime import datetime
 from khayyam import JalaliDatetime
 
+from lib import Root
 
-class Item:
+
+class Item(Root):
+    item_list = []
+    object_list = []
     item_id = 0
     item_type_list = ['f', 'b', 's']
     food_list = []
@@ -18,6 +22,8 @@ class Item:
         self.price = price
         self._datetime = datetime.now()
         self.item_id = self.generate_id()
+        self.object_list.append(self)
+        super().__init__()
 
     @property
     def jalali_datetime(self):
@@ -33,14 +39,23 @@ class Item:
         return cls.item_id
 
     @classmethod
-    def sample(cls):
-        return cls(name='item1', item_type='f', price=10)
+    def sample(cls, name='item1', item_type='f', price=10):
+        return cls(name=name, item_type=item_type, price=price)
 
     @classmethod
-    def sample2(cls):
-        return cls(name='item2', item_type='b', price=1)
+    def show_menu(cls):
+        print("FOOD MENU")
+        for food in cls.food_list:
+            print(food)
+        print("BEVERAGE MENU")
+        for beverage in cls.beverage_list:
+            print(beverage)
+        print("STARTER MENU")
+        for starter in cls.starter_list:
+            print(starter)
 
-# TODO-3: Add show_menu() classmethod to the Item class which will print all
-#       items in the menu
+    def prompt(self):
+        return {'name': input('name: '), 'item_type': input("item type: "), 'price': input('price: ')}
+
 # TODO-3: Add prompt() method to the Item class which will get proper dict for
 #       creating each single item from user input and return data
